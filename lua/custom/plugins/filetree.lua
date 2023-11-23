@@ -11,6 +11,7 @@ return {
   config = function ()
     require('neo-tree').setup {
       filesystem = {
+        find_by_full_path_words = true,
         hijack_netrw_behavior = "open_current",
                              -- "open_default",
                              -- "disabled", 
