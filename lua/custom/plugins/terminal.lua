@@ -3,9 +3,11 @@ return {
   version = "*",
   config = function ()
     require('toggleterm').setup{
-      hidden = true,
+      --direction = 'vertical' | 'horizontal' | 'tab' | 'float',
+      hdden = true,
       hide_numbers = true,
-      open_mapping = '<leader>t',
+      insert_mappings = false,
+      open_mapping = '<leader>,',
       start_in_insert = true,
     }
   end,
