@@ -245,6 +245,7 @@ vim.keymap.set('n', '<leader>k', ":noh<cr>")
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -517,9 +518,11 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  pyright = {},
+  -- pyright = {},
+  ruff_lsp = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  taplo = {},
   html = { filetypes = { 'html', 'twig', 'hbs'} },
   volar = {},
 
