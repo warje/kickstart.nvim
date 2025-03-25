@@ -518,10 +518,17 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
-  ruff_lsp = {},
+  pyright = {
+    filetypes = { 'python' },
+    settings = {
+      python = {
+        pythonPath = vim.fn.exepath("python3"),
+      },
+    }
+  },
+  -- ruff_lsp = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
   taplo = {},
   html = { filetypes = { 'html', 'twig', 'hbs'} },
   volar = {},
