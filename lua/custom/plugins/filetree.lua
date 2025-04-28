@@ -1,21 +1,49 @@
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
 
 return {
-  "nvim-neo-tree/neo-tree.nvim",
-  version = "*",
+  'nvim-neo-tree/neo-tree.nvim',
+  version = '*',
   dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    "MunifTanjim/nui.nvim",
+    'nvim-lua/plenary.nvim',
+    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+    'MunifTanjim/nui.nvim',
   },
-  config = function ()
+  config = function()
     require('neo-tree').setup {
       filesystem = {
         find_by_full_path_words = true,
-        hijack_netrw_behavior = "open_current",
-                             -- "open_default",
-                             -- "disabled", 
-      }
+        hijack_netrw_behavior = 'open_current',
+        -- "open_default",
+        -- "disabled",
+        commands = {
+          avante_add_files = function(state)
+            local node = state.tree:get_node()
+            local filepath = node:get_id()
+            local relative_path = require('avante.utils').relative_path(filepath)
+
+            local sidebar = require('avante').get()
+
+            local open = sidebar:is_open()
+            -- ensure avante sidebar is open
+            if not open then
+              require('avante.api').ask()
+              sidebar = require('avante').get()
+            end
+
+            sidebar.file_selector:add_selected_file(relative_path)
+
+            -- remove neo tree buffer
+            if not open then
+              sidebar.file_selector:remove_selected_file 'neo-tree filesystem [1]'
+            end
+          end,
+        },
+        window = {
+          mappings = {
+            ['oa'] = 'avante_add_files',
+          },
+        },
+      },
     }
   end,
 }

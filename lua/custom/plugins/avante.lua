@@ -9,7 +9,7 @@ return {
     copilot = {},
   },
   behavior = {
-    enable_cursor_planning_mode = false,
+    enable_cursor_planning_mode = true,
     -- whether to use the default keymaps
     -- use_default_keymaps = true,
     -- whether to use the default commands
