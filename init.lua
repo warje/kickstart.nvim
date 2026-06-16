@@ -598,18 +598,37 @@ require('lazy').setup({
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
+      -- Path to the bundled `@vue/typescript-plugin` inside the Mason-installed vue-language-server.
+      -- `ts_ls` loads this plugin so it understands `.vue` files; `vue_ls` then forwards
+      -- TypeScript requests to `ts_ls` (Volar "hybrid mode").
+      local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+
       ---@type table<string, vim.lsp.Config>
       local servers = {
         -- clangd = {},
         -- gopls = {},
         pyright = {},
         -- rust_analyzer = {},
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+
+        -- Vue language server (Volar). Handles `<template>`/`<style>` and SFC features.
+        -- The shipped config (`nvim-lspconfig/lsp/vue_ls.lua`) wires up request
+        -- forwarding to `ts_ls`, so an empty override is all that's needed here.
+        vue_ls = {},
+
+        -- TypeScript/JavaScript LSP. Loads the Vue TS plugin and attaches to `.vue`
+        -- buffers so `<script>` blocks get full TS support.
+        ts_ls = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vue_language_server_path,
+                languages = { 'vue' },
+              },
+            },
+          },
+          filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
+        },
 
         stylua = {}, -- Used to format Lua code
 
@@ -889,7 +908,7 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'vue', 'javascript', 'typescript', 'tsx', 'css', 'scss' }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
